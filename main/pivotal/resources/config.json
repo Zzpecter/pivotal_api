@@ -1,0 +1,6 @@
+{
+  "API_TOKEN": "2d9139b9d283b9fcc56f347c4c9cb09a",
+  "API_URL": "https://www.pivotaltracker.com/services/v5",
+  "API_TOKEN_NAME": "X-TrackerToken",
+  "CONTENT_TYPE": "application/json"
+}
