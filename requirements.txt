@@ -1,5 +1,4 @@
 requests
-logging
 pyyaml
 assertpy
 pytest
