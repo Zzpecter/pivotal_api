@@ -1,8 +1,8 @@
-image: "node"
+image: "python:3.8-alpine"
 
 before_script:
   - python --version
-  - pipenv install
+  - pip install -r requirements.txt
 
 stages:
   - Static Analysis
@@ -10,18 +10,16 @@ stages:
 flake8:
   stage: Static Analysis
   script:
-    - flake8 tests/*.py
-    - flake8 tests/*/*.py
-    - flake8 main/*.py
-    - flake8 main/*/*.py
+    - flake8 tests/
+    - flake8 main/
+
 
 pylint:
   stage: Static Analysis
   script:
-    - pylint tests/*.py
-    - pylint tests/*/*.py
-    - pylint main/*.py
-    - pylint main/*/*.py
+    - pylint tests/
+    - pylint main/
+
 
 pycodestyle:
   stage: Static Analysis
