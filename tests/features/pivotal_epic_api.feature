@@ -4,12 +4,12 @@ Feature: API Pivotal service
   I want to get answers for via a REST API,
   So that my app can get answers anywhere.
 
-  @pivotal @service @fixture_create_epics @fixture_delete_projects
+  @pivotal @fixture_create_epics @fixture_delete_projects
   Scenario: Get all epics of a project
     Given the "GET" request to "/projects/<projects_id>/epics" is sent
     Then the response status code should be 200
 
-  @pivotal @service @fixture_create_epics @fixture_delete_projects
+  @pivotal @fixture_create_epics @fixture_delete_projects
   Scenario: Post a new epic
     Given the following body parameters:
       | key               | value               |
@@ -17,12 +17,12 @@ Feature: API Pivotal service
     When the "POST" request to "/projects/<projects_id>/epics" is sent
     Then the response status code should be 200
 
-  @pivotal @service @fixture_create_epics @fixture_delete_projects
+  @pivotal @fixture_create_epics @fixture_delete_projects
   Scenario: Get a specific epic of a project
     Given the "GET" request to "/projects/<projects_id>/epics/<epics_id>" is sent
     Then the response status code should be 200
 
-  @pivotal @service @fixture_create_epics @fixture_delete_projects
+  @pivotal @fixture_create_epics @fixture_delete_projects
   Scenario: Put updates a specific epic of a project
     Given the following body parameters:
       | key               | value                |
@@ -30,12 +30,12 @@ Feature: API Pivotal service
     When the "PUT" request to "/projects/<projects_id>/epics/<epics_id>" is sent
     Then the response status code should be 200
 
-  @pivotal @service @fixture_create_epics @fixture_delete_projects
+  @pivotal @fixture_create_epics @fixture_delete_projects
   Scenario: Delete a specific epic of a project
     Given the "DELETE" request to "/projects/<projects_id>/epics/<epics_id>" is sent
     Then the response status code should be 204
 
-  @pivotal @service @fixture_create_epics @fixture_delete_projects
+  @pivotal @fixture_create_epics @fixture_delete_projects
   Scenario: Get an individual epic
     Given the "GET" request to "/epics/<epics_id>" is sent
     Then the response status code should be 200

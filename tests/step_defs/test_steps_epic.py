@@ -16,10 +16,6 @@ LOGGER = CustomLogger(name='api-logger')
 my_request_controller = RequestController()
 
 scenarios('../features/pivotal_epic_api.feature')
-# scenarios('../features/pivotal_transitions_api.feature')
-# scenarios('../features/pivotal_reviews_api.feature')
-# scenarios('../features/pivotal_iterations_api.feature')
-# scenarios('../features/pivotal_transitions_api.feature')
 
 
 @given(parsers.parse('the following body parameters:\n{body}'))
