@@ -79,8 +79,8 @@ def step_verify_response_code(status_code, request):
 @then(parsers.parse('the response body should be verified with:\n{table}'))
 def step_verify_response_payload(table, request):  # pylint: disable=W0613
     """
-        The function that verify that an inserted table is a subset of the response
-        of the request
+        The function that verify that an inserted table is a subset of the
+        response of the request
         Args:
             table (datatable): Table to compare with the response
             request (string): request fixture object
