@@ -85,6 +85,15 @@ class RequestController:
             RequestController.__instance = RequestController()
         return RequestController.__instance
 
+    def return_json(self):
+        try:
+            self.response.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            return "Error: " + str(e)
+
+        json_obj = self.response.json()
+        return json_obj
+
     def send_request(self, request_method, endpoint, payload=None):
         """
         Constructs all the necessary attributes for the Request
@@ -106,7 +115,7 @@ class RequestController:
                 request performed
         """
         self.last_method_used = request_method
-        if request_method in 'PUT' or request_method in 'POST':
+        if request_method in ['PUT', 'POST']:
             self.response = requests.request(request_method,
                                              url=f'{self.url}{endpoint}',
                                              data=json.dumps(payload),
@@ -116,28 +125,16 @@ class RequestController:
                                              url=f'{self.url}{endpoint}',
                                              headers=self.header)
 
-        try:
-            assert_that(self.response.status_code).is_equal_to(HTTPStatus.OK)
-        except AssertionError as error:
-            self.logger.warning(f"{error}")
+        self.logger.info(f'  - METHOD USED: {self.last_method_used}')
+        self.logger.info(f'  - URL: {self.response.url}')
+        self.logger.info(f'  - STATUS CODE: {self.response.status_code} '
+                         f'- {self.response.reason}')
+        self.logger.info(f'  - TIME ELAPSED: {self.response.elapsed} \n')
 
-        if self.response is not None:
-            self.logger.info('.... :::: RESPONSE REPORT :::: ....')
-            self.logger.info(f'  - METHOD USED: {self.last_method_used}')
-            self.logger.info(f'  - url: {self.response.url}')
-            self.logger.info(f'  - STATUS CODE: {self.response.status_code} '
-                             f'- {self.response.reason}')
-            self.logger.info(f'  - TIME ELAPSED: {self.response.elapsed} \n')
-            self.logger.info('.... :::: JSON RESPONSE :::: ....\n')
-            self.logger.info(json.dumps(self.response.json(),
-                                        indent=4,
-                                        sort_keys=True))
-            self.logger.info('\n.... ::::  REPORT COMPLETED :::: ....\n\n ')
-        else:
-            self.logger.warning('No response available')
-
-        return self.response.status_code, self.response.json()
+        return self.response.status_code, self.response
 
     def close_session(self):
         """Close Session"""
         self.session.close()
+
+

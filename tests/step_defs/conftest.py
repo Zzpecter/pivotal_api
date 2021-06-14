@@ -53,7 +53,8 @@ def pytest_bdd_before_scenario(request, scenario):
                 request_method=Methods.POST.value,
                 endpoint=endpoint,
                 payload=payload_dict)
-            request.config.cache.set(f'{endpoint[1:]}_id', response['id'])
+            request.config.cache.set(f'{endpoint[1:]}_id',
+                                     response.json()['id'])
             CACHE_TAGS.append(f'{endpoint[1:]}_id')
 
 

@@ -41,7 +41,8 @@ def step_send_request(http_method, endpoint, request):
 
     LOGGER.info(f'RESPONSE  {response}')
     request.config.cache.set('status_code', status_code)
-    request.config.cache.set('response', response)
+    if http_method != 'DELETE':
+        request.config.cache.set('response', response.json())
 
 
 @given(parsers.parse('the following request body parameters:\n{body}'))
