@@ -20,7 +20,6 @@ SCENARIO_TAGS = None
 def setup(request):
     """
     context of before all
-    :return:
     """
     request.config.cache.get('endpoint', None)
     LOGGER.info("=============EXECUTED BEFORE ALL")
@@ -36,7 +35,6 @@ def pytest_bdd_before_scenario(request, scenario):
 
     Args:
         request (object): request object of fixture
-        feature (object): feature object of pytest bdd
         scenario (object): scenario object of pytest bdd
     """
     LOGGER.info(f"=============STARTED SCENARIO {scenario.name}")
@@ -72,7 +70,6 @@ def pytest_bdd_after_scenario(request, scenario):
 
     Args:
         request (object): request object of fixture
-        feature (object): feature object of pytest bdd
         scenario (object): scenario object of pytest bdd
     """
     LOGGER.info(

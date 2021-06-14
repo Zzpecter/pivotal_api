@@ -20,8 +20,9 @@ scenarios('../features/pivotal_epic_api.feature')
 
 @given(parsers.parse('the following body parameters:\n{body}'))
 def step_set_body_parameters(datatable, body, request):
-    """set body parameters
-
+    """
+    The function that retrieves a table from the scenario and
+    creates a body for the request to the API
     Args:
         datatable (datatable): kind of class object to interact with datatables
         body (datatable): body datatable composed by keys and values
@@ -40,7 +41,9 @@ def step_set_body_parameters(datatable, body, request):
 @given(parsers.parse('the "{http_method}" request to "{endpoint}" is sent'))
 @when(parsers.parse('the "{http_method}" request to "{endpoint}" is sent'))
 def step_send_request(http_method, endpoint, request):
-    """[summary]
+    """
+    The function that executes the request controller and receives the response
+    from the API
 
     Args:
         http_method (string): http method or verb
@@ -74,13 +77,21 @@ def step_verify_response_code(status_code, request):
 
 
 @then(parsers.parse('the response body should be verified with:\n{table}'))
-def step_verify_response_payload(table):  # pylint: disable=W0613
-    """verify response payload
-
-    Args:
-        table (datatable)
+def step_verify_response_payload(table, request):  # pylint: disable=W0613
     """
-    LOGGER.info('Not implemented yet')
+        The function that verify that an inserted table is a subset of the response
+        of the request
+        Args:
+            table (datatable): Table to compare with the response
+            request (string): request fixture object
+        """
+    response = request.config.cache.get('response', None)
+    datatable = parse_str_table(table)
+    body_dict = Table_parser. \
+        parse_to_dict(keys=datatable.columns['key'],
+                      values=datatable.columns['value'])
+
+    assert_that(body_dict.items() <= response.items()).is_equal_to(True)
 
 
 @then(parsers.parse('the response schema should be verified with "{json}"'))

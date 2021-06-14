@@ -16,6 +16,9 @@ Feature: API Pivotal service
       | name              | New epic :D         |
     When the "POST" request to "/projects/<projects_id>/epics" is sent
     Then the response status code should be 200
+    And the response body should be verified with:
+      | key               | value               |
+      | name              | New epic :D         |
 
   @pivotal @fixture_create_epics @fixture_delete_projects
   Scenario: Get a specific epic of a project
@@ -29,6 +32,9 @@ Feature: API Pivotal service
       | name              | Updated epic :D      |
     When the "PUT" request to "/projects/<projects_id>/epics/<epics_id>" is sent
     Then the response status code should be 200
+    And the response body should be verified with:
+      | key               | value               |
+      | name              | Updated epic :D     |
 
   @pivotal @fixture_create_epics @fixture_delete_projects
   Scenario: Delete a specific epic of a project
