@@ -6,7 +6,7 @@ import pytest
 from main.core.utils.logger import CustomLogger
 from main.core.utils.file_reader import read_json
 from main.core.request_controller import RequestController
-from main.core.utils.api_constants import HttpMethods as Methods
+from main.pivotal.utils.api_constants import HttpMethods as Methods
 
 LOGGER = CustomLogger('test_logger')
 

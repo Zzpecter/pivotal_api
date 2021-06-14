@@ -18,7 +18,8 @@ Misc variables:
     my_request_controller
 """
 from main.core.request_controller import RequestController
-from main.core.utils.api_constants import HttpMethods as Methods
+from main.pivotal.utils.api_constants import HttpMethods as http
+from main.pivotal.utils.api_constants import Endpoints as endpoints
 
 
 class StoryEndpoints:
@@ -52,8 +53,9 @@ class StoryEndpoints:
                 the response object, loaded with the list of projects.
         """
         return RequestController.get_instance().\
-            send_request(Methods.GET.value,
-                         f"/projects/{project_id}/stories/")
+            send_request(http.GET.value,
+                         f'/{endpoints.PROJECTS.value}{project_id}/'
+                         f'{endpoints.STORIES.value}')
 
     @staticmethod
     def get_story(project_id, story_id):
@@ -66,16 +68,19 @@ class StoryEndpoints:
                 the response object, loaded with the selected project's data.
         """
         return RequestController.get_instance().\
-            send_request(Methods.GET.value,
-                         f"/projects/{project_id}/stories/{story_id}")
+            send_request(http.GET.value,
+                         f'/{endpoints.PROJECTS.value}{project_id}/'
+                         f'{endpoints.STORIES.value}{story_id}')
 
     @staticmethod
-    def post_story(payload_dict):
+    def post_story(project_id, payload_dict):
         """
         Posts a new story
 
         Parameters
         ----------
+            project_id : int
+                the id of the project to be updated
             payload_dict : dict
                 The data to be sent, encoded in a dictionary
         Returns
@@ -84,8 +89,9 @@ class StoryEndpoints:
                 the response object.
         """
         return RequestController.get_instance().\
-            send_request(Methods.POST.value,
-                         '/projects/{project_id}/stories',
+            send_request(http.POST.value,
+                         f'/{endpoints.PROJECTS.value}{project_id}/'
+                         f'{endpoints.STORIES.value}',
                          payload=payload_dict)
 
     @staticmethod
@@ -107,8 +113,9 @@ class StoryEndpoints:
                 the response object.
         """
         return RequestController.get_instance().\
-            send_request(Methods.PUT.value,
-                         f'/projects/{project_id}/stories/{story_id}',
+            send_request(http.PUT.value,
+                         f'/{endpoints.PROJECTS.value}{project_id}/'
+                         f'{endpoints.STORIES.value}{story_id}',
                          payload=payload_dict)
 
     @staticmethod
@@ -128,5 +135,6 @@ class StoryEndpoints:
                 the response object.
         """
         return RequestController.get_instance().\
-            send_request(Methods.DELETE.value,
-                         f'/projects/{project_id}/stories/{story_id}')
+            send_request(http.DELETE.value,
+                         f'/{endpoints.PROJECTS.value}{project_id}/'
+                         f'{endpoints.STORIES.value}{story_id}')

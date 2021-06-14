@@ -22,7 +22,6 @@ class StringUtils:
     @staticmethod
     def replace_string(base_string, replace_string, pattern=r"<(\w+)>"):
         """
-
         :param pattern: the pattern that is going to be replaced from the
         string.
         :param base_string: the original string sent to the function
@@ -31,16 +30,3 @@ class StringUtils:
         :return: string: the updated string.
         """
         return re.sub(pattern, replace_string, base_string)
-
-    @staticmethod
-    def replace_string_old(pattern, base_string, replace_string):
-        """
-
-        :param pattern: the pattern that is going to be replaced from the
-        string.
-        :param base_string: the original string sent to the function
-        :param replace_string: the string which should be inserted if the
-        replacement pattern is found
-        :return: string: the updated string.
-        """
-        return base_string.replace(pattern, replace_string)

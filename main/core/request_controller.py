@@ -24,7 +24,7 @@ from requests import Session
 from assertpy import assert_that
 from main.core.utils.file_reader import read_json
 from main.core.utils.logger import CustomLogger
-from main.core.utils.api_constants import CONFIG_PATH
+from main.pivotal.utils.api_constants import CONFIG_PATH
 
 
 class RequestController:
@@ -44,9 +44,8 @@ class RequestController:
     -------
     send_request(request_method, endpoint, payload:Optional):
         sends an HTTP request via the pre-configured Request Controller
-    log_response() :
-        generates a report based on the HTTP response and saves it with
-        the logger
+    close_session():
+        closes the request_controller session
 
     """
     __instance = None
@@ -77,7 +76,7 @@ class RequestController:
 
     @staticmethod
     def get_instance():
-        """This method get a instance of the RequestsManager class.
+        """This method gets a singleton instance of the RequestsManager class.
 
         Returns:
             RequestManager -- return a instance of RequestsManager class.
@@ -122,31 +121,22 @@ class RequestController:
         except AssertionError as error:
             self.logger.warning(f"{error}")
 
-        self.log_response()
-        if self.response.status_code is not HTTPStatus.OK.value:
-            return self.response.status_code, {"message": self.response.text}
-        return self.response.status_code, self.response.json()
-
-    def log_response(self):
-        """
-        Generates a report based on the HTTP response and saves it with the
-        logger.
-        """
         if self.response is not None:
-            aux_string = '.... :::: PRINTING THE RESPONSE REPORT :::: ....\n'
-            aux_string += f'  - METHOD USED: {self.last_method_used} \n'
-            aux_string += f'  - url: {self.response.url} \n'
-            aux_string += f'  - STATUS CODE: {self.response.status_code} - ' \
-                          f' {self.response.reason} \n'
-            aux_string += f'  - TIME ELAPSED: {self.response.elapsed} \n'
-            aux_string += '.... :::: COMPLETE JSON RESPONSE :::: ....\n'
-            self.logger.info(aux_string)
-            if self.response.status_code == HTTPStatus.OK:
-                self.logger.info(json.dumps(self.response.json(), indent=4,
-                                            sort_keys=True))
+            self.logger.info('.... :::: RESPONSE REPORT :::: ....')
+            self.logger.info(f'  - METHOD USED: {self.last_method_used}')
+            self.logger.info(f'  - url: {self.response.url}')
+            self.logger.info(f'  - STATUS CODE: {self.response.status_code} '
+                             f'- {self.response.reason}')
+            self.logger.info(f'  - TIME ELAPSED: {self.response.elapsed} \n')
+            self.logger.info('.... :::: JSON RESPONSE :::: ....\n')
+            self.logger.info(json.dumps(self.response.json(),
+                                        indent=4,
+                                        sort_keys=True))
             self.logger.info('\n.... ::::  REPORT COMPLETED :::: ....\n\n ')
         else:
             self.logger.warning('No response available')
+
+        return self.response.status_code, self.response.json()
 
     def close_session(self):
         """Close Session"""

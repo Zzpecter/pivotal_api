@@ -13,7 +13,7 @@ Misc variables:
 """
 import json
 import yaml
-from main.core.utils.api_constants import DEFAULT_FILE
+from main.pivotal.utils.api_constants import DEFAULT_FILE
 
 
 def read_json(file=DEFAULT_FILE):

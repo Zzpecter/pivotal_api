@@ -18,7 +18,8 @@ Misc variables:
     my_request_controller
 """
 from main.core.request_controller import RequestController
-from main.core.utils.api_constants import HttpMethods as Methods
+from main.pivotal.utils.api_constants import HttpMethods as http
+from main.pivotal.utils.api_constants import Endpoints as endpoints
 
 
 class ProjectEndpoints:
@@ -52,8 +53,9 @@ class ProjectEndpoints:
                 the response object, loaded with the list of projects.
         """
         return RequestController.get_instance().\
-            send_request(Methods.GET.value,
-                         "/projects/")
+            send_request(http.GET.value,
+                         endpoints.PROJECTS.value
+                         )
 
     @staticmethod
     def get_project(project_id):
@@ -66,8 +68,8 @@ class ProjectEndpoints:
                 the response object, loaded with the selected project's data.
         """
         return RequestController.get_instance().\
-            send_request(Methods.GET.value,
-                         f"/projects/{project_id}")
+            send_request(http.GET.value,
+                         f"/{endpoints.PROJECTS.value}{project_id}")
 
     @staticmethod
     def post_project(payload_dict):
@@ -84,8 +86,8 @@ class ProjectEndpoints:
                 the response object.
         """
         return RequestController.get_instance().\
-            send_request(Methods.POST.value,
-                         '/projects/',
+            send_request(http.POST.value,
+                         endpoints.PROJECTS.value,
                          payload=payload_dict)
 
     @staticmethod
@@ -105,8 +107,8 @@ class ProjectEndpoints:
                 the response object.
         """
         return RequestController.get_instance().\
-            send_request(Methods.PUT.value,
-                         f'/projects/{project_id}',
+            send_request(http.PUT.value,
+                         f"/{endpoints.PROJECTS.value}{project_id}",
                          payload=payload_dict)
 
     @staticmethod
@@ -124,5 +126,5 @@ class ProjectEndpoints:
                 the response object.
         """
         return RequestController.get_instance().\
-            send_request(Methods.DELETE.value,
-                         f'/projects/{project_id}')
+            send_request(http.DELETE.value,
+                         f"/{endpoints.PROJECTS.value}{project_id}")
