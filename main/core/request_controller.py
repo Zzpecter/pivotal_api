@@ -17,11 +17,9 @@ Misc variables:
     last_method_used
 """
 
-from http import HTTPStatus
 import json
 import requests
 from requests import Session
-from assertpy import assert_that
 from main.core.utils.file_reader import read_json
 from main.core.utils.logger import CustomLogger
 from main.pivotal.utils.api_constants import CONFIG_PATH
@@ -86,13 +84,18 @@ class RequestController:
         return RequestController.__instance
 
     def return_json(self):
+        """
+        Function to returns a json from the response
+        Returns: The response is converted to a json object
+
+        """
         try:
             self.response.raise_for_status()
-        except requests.exceptions.HTTPError as e:
-            return "Error: " + str(e)
+        except requests.exceptions.HTTPError as http_exception:
+            return "Error: " + str(http_exception)
 
-        json_obj = self.response.json()
-        return json_obj
+        json_object = self.response.json()
+        return json_object
 
     def send_request(self, request_method, endpoint, payload=None):
         """
@@ -136,5 +139,3 @@ class RequestController:
     def close_session(self):
         """Close Session"""
         self.session.close()
-
-

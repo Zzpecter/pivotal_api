@@ -9,6 +9,7 @@ from main.core.utils.file_reader import read_json
 from main.core.utils.logger import CustomLogger
 from main.core.utils.table_parser import TableParser
 from main.core.utils.string_utils import StringUtils as Regex
+from main.pivotal.utils.api_constants import HttpMethods as http
 from main.core.request_controller import RequestController
 
 LOGGER = CustomLogger('test_logger')
@@ -41,7 +42,7 @@ def step_send_request(http_method, endpoint, request):
 
     LOGGER.info(f'RESPONSE  {response}')
     request.config.cache.set('status_code', status_code)
-    if http_method != 'DELETE':
+    if http_method != http.DELETE.value:
         request.config.cache.set('response', response.json())
 
 
