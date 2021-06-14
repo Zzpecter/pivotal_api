@@ -10,7 +10,7 @@ from sttable import parse_str_table
 from main.core.utils.logger import CustomLogger
 from main.core.utils.table_parser import TableParser as Table_parser
 from main.core.request_controller import RequestController
-from main.core.utils.regex import RegularExpressionHandler as Regex
+from main.core.utils.string_utils import StringUtils as Regex
 
 LOGGER = CustomLogger(name='api-logger')
 my_request_controller = RequestController()
@@ -53,11 +53,10 @@ def step_send_request(http_method, endpoint, request):
 
     for replace_item in endpoint_name:
         tag_value = str(request.config.cache.get(replace_item, None))
-        endpoint = Regex.replace_tag(f'<{replace_item}>',
-                                     endpoint, tag_value)
-    status_code, response = my_request_controller.send_request(http_method,
-                                                               endpoint,
-                                                               body)
+        endpoint = Regex.replace_string(endpoint,
+                                        tag_value, f'<{replace_item}>')
+    status_code, response = RequestController.get_instance().\
+        send_request(http_method, endpoint, body)
     request.config.cache.set('response', response)
     request.config.cache.set('status_code', str(status_code))
 

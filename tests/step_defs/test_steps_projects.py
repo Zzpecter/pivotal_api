@@ -5,15 +5,14 @@ from assertpy import assert_that
 from pytest_bdd import scenarios, given, when, then, parsers
 from sttable import parse_str_table
 from jsonschema import validate
-
 from main.core.utils.file_reader import read_json
 from main.core.utils.logger import CustomLogger
-from main.core.utils.table_parser import TableParser as table_parser
-from main.core.utils.regex import RegularExpressionHandler as regex
+from main.core.utils.table_parser import TableParser
+from main.core.utils.string_utils import StringUtils as Regex
 from main.core.request_controller import RequestController
 
 LOGGER = CustomLogger('test_logger')
-REQUEST_CONTROLLER = RequestController()
+
 
 scenarios('../features/pivotal_projects.feature')
 
@@ -35,9 +34,9 @@ def step_send_request(http_method, endpoint, request):
     body = request.config.cache.get('body', None)
 
     if '<id>' in endpoint:
-        endpoint = regex.replace_tag('<id>', endpoint, str(new_id))
+        endpoint = Regex.replace_string(endpoint, str(new_id), '<id>')
 
-    status_code, response = REQUEST_CONTROLLER.send_request(
+    status_code, response = RequestController.get_instance().send_request(
             request_method=http_method,
             endpoint=endpoint,
             payload=body)
@@ -58,7 +57,7 @@ def step_set_body_parameters(datatable, body, request):
     """
     datatable.body = parse_str_table(body)
 
-    body_dict = table_parser.\
+    body_dict = TableParser.\
         parse_to_dict(keys=datatable.body.columns['key'],
                       values=datatable.body.columns['value'])
 
@@ -91,7 +90,7 @@ def step_verify_response_payload(table, request):  # pylint: disable=W0613
 
     datatable = parse_str_table(table)
 
-    body_dict = table_parser. \
+    body_dict = TableParser. \
         parse_to_dict(keys=datatable.columns['key'],
                       values=datatable.columns['value'])
 

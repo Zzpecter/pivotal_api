@@ -3,24 +3,24 @@ Python module for handling everything related to regular expressions.
 
 Classes:
 
-    RegularExpressionHandler
+    StringUtils
 
 Functions:
 
-    replace_tag(pattern, base_string, replace_string) -> string
+    replace_string(pattern, base_string, replace_string) -> string
 
 """
 import re
 
 
-class RegularExpressionHandler:
+class StringUtils:
     """
     Regular expression handler is a static class for manipulating strings
     based on RE's
     """
 
     @staticmethod
-    def replace_tag(pattern, base_string, replace_string):
+    def replace_string(base_string, replace_string, pattern=r"<(\w+)>"):
         """
 
         :param pattern: the pattern that is going to be replaced from the
@@ -33,7 +33,7 @@ class RegularExpressionHandler:
         return re.sub(pattern, replace_string, base_string)
 
     @staticmethod
-    def replace_tag_old(pattern, base_string, replace_string):
+    def replace_string_old(pattern, base_string, replace_string):
         """
 
         :param pattern: the pattern that is going to be replaced from the

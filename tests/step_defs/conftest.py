@@ -6,9 +6,9 @@ import pytest
 from main.core.utils.logger import CustomLogger
 from main.core.utils.file_reader import read_json
 from main.core.request_controller import RequestController
+from main.core.utils.api_constants import HttpMethods as Methods
 
 LOGGER = CustomLogger('test_logger')
-REQUEST_CONTROLLER = RequestController()
 
 CACHE_TAGS = ['body', 'id', 'response', 'status_code']
 
@@ -27,6 +27,7 @@ def setup(request):
 
     def pytest_bdd_after_all():
         LOGGER.info("=============EXECUTED AFTER ALL")
+        RequestController.get_instance().close_session()
     request.addfinalizer(pytest_bdd_after_all)
 
 
@@ -48,8 +49,8 @@ def pytest_bdd_before_scenario(request, scenario):
             payload_dict = read_json(
                 f'./main/pivotal/resources/payload_{endpoint[1:]}.json')
 
-            _, response = REQUEST_CONTROLLER.send_request(
-                request_method='POST',
+            _, response = RequestController.get_instance().send_request(
+                request_method=Methods.POST.value,
                 endpoint=endpoint,
                 payload=payload_dict)
             request.config.cache.set(f'{endpoint[1:]}_id', response['id'])
@@ -80,9 +81,9 @@ def pytest_bdd_after_scenario(request, scenario):
     for tag in scenario.tags:
         if "delete" in tag:
             element_id = request.config.cache.get('response', None)['id']
-            REQUEST_CONTROLLER.send_request(request_method='DELETE',
-                                            endpoint=f"/{tag.split('_')[-1]}/"
-                                                     f"{element_id}")
+            RequestController.get_instance().\
+                send_request(request_method=Methods.DELETE.value,
+                             endpoint=f"/{tag.split('_')[-1]}/{element_id}")
 
     for tag in CACHE_TAGS:
         if request.config.cache.get(tag, None) is not None:

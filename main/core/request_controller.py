@@ -20,10 +20,11 @@ Misc variables:
 from http import HTTPStatus
 import json
 import requests
+from requests import Session
 from assertpy import assert_that
-
 from main.core.utils.file_reader import read_json
 from main.core.utils.logger import CustomLogger
+from main.core.utils.api_constants import CONFIG_PATH
 
 
 class RequestController:
@@ -48,7 +49,9 @@ class RequestController:
         the logger
 
     """
-    def __init__(self, config_path=r'main\pivotal\resources\config.json'):
+    __instance = None
+
+    def __init__(self, config_path=CONFIG_PATH):
         """
         Constructs all the necessary attributes for the Request Controller
         object.
@@ -70,6 +73,18 @@ class RequestController:
         self.last_method_used = None
         self.logger = CustomLogger(name='api-logger')
         self.logger.debug('Logger initialized!')
+        self.session = Session()
+
+    @staticmethod
+    def get_instance():
+        """This method get a instance of the RequestsManager class.
+
+        Returns:
+            RequestManager -- return a instance of RequestsManager class.
+        """
+        if RequestController.__instance is None:
+            RequestController.__instance = RequestController()
+        return RequestController.__instance
 
     def send_request(self, request_method, endpoint, payload=None):
         """
@@ -126,9 +141,13 @@ class RequestController:
             aux_string += f'  - TIME ELAPSED: {self.response.elapsed} \n'
             aux_string += '.... :::: COMPLETE JSON RESPONSE :::: ....\n'
             self.logger.info(aux_string)
-            if self.response.status_code == 200:
+            if self.response.status_code == HTTPStatus.OK:
                 self.logger.info(json.dumps(self.response.json(), indent=4,
                                             sort_keys=True))
             self.logger.info('\n.... ::::  REPORT COMPLETED :::: ....\n\n ')
         else:
             self.logger.warning('No response available')
+
+    def close_session(self):
+        """Close Session"""
+        self.session.close()

@@ -30,11 +30,3 @@ class TableParser:
                 value = int(value)
             body_dict.update({key: value})
         return body_dict
-
-    @staticmethod
-    def dummy():
-        """
-        method for passing the pylint linter rule R0903: too few public
-        methods (1/2).
-        """
-        return None

@@ -18,8 +18,7 @@ Misc variables:
     my_request_controller
 """
 from main.core.request_controller import RequestController
-
-my_request_controller = RequestController()
+from main.core.utils.api_constants import HttpMethods as Methods
 
 
 class StoryEndpoints:
@@ -52,8 +51,8 @@ class StoryEndpoints:
             response : object
                 the response object, loaded with the list of projects.
         """
-        return my_request_controller.\
-            send_request('GET',
+        return RequestController.get_instance().\
+            send_request(Methods.GET.value,
                          f"/projects/{project_id}/stories/")
 
     @staticmethod
@@ -66,8 +65,8 @@ class StoryEndpoints:
             response : object
                 the response object, loaded with the selected project's data.
         """
-        return my_request_controller.\
-            send_request('GET',
+        return RequestController.get_instance().\
+            send_request(Methods.GET.value,
                          f"/projects/{project_id}/stories/{story_id}")
 
     @staticmethod
@@ -84,8 +83,8 @@ class StoryEndpoints:
             response : object
                 the response object.
         """
-        return my_request_controller.\
-            send_request('POST',
+        return RequestController.get_instance().\
+            send_request(Methods.POST.value,
                          '/projects/{project_id}/stories',
                          payload=payload_dict)
 
@@ -107,8 +106,8 @@ class StoryEndpoints:
             response : object
                 the response object.
         """
-        return my_request_controller.\
-            send_request('PUT',
+        return RequestController.get_instance().\
+            send_request(Methods.PUT.value,
                          f'/projects/{project_id}/stories/{story_id}',
                          payload=payload_dict)
 
@@ -128,6 +127,6 @@ class StoryEndpoints:
             response : object
                 the response object.
         """
-        return my_request_controller.\
-            send_request('DELETE',
+        return RequestController.get_instance().\
+            send_request(Methods.DELETE.value,
                          f'/projects/{project_id}/stories/{story_id}')
