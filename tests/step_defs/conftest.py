@@ -57,10 +57,13 @@ def pytest_bdd_before_scenario(request, scenario):
 
 
 def pytest_bdd_step_error(step):
-    """ pytest bdd step error
-
+    """
+    pytest bdd step error
     Args:
-        multiple args related with pytest bdd
+        step: multiple args related with pytest bdd
+
+    Returns:
+
     """
     LOGGER.debug(f'=============FAILED STEP: {step}')
 
@@ -115,6 +118,7 @@ class DataTable:
     def __repr__(self) -> str:
         """
         __repr__
-        :return:
+        Returns:
+             __str__ instance
         """
         return self.__str__()

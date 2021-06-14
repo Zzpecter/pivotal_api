@@ -11,8 +11,6 @@ Functions:
     close()
 
 Misc variables:
-
-    name
     handlers
 """
 import logging
@@ -44,16 +42,11 @@ class CustomLogger(logging.Logger):
         """
         Constructs all the necessary attributes for the Logger to work
         properly.
-
-        Parameters
-        ----------
-            name : str
-                the name with which the logger will be identified and accessed.
+        Args:
+            name(str): the name with which the logger will
+            be identified and accessed.
         """
-
         logging.Logger.__init__(self, name)
-
-        # logging.config.dictConfig(read_yaml('resources/log_config.yaml'))
         console_handler = logging.StreamHandler()
         aux_string = \
             "./logs/" \

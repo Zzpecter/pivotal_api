@@ -7,15 +7,12 @@ Classes:
 
 Functions:
 
-    get_stories
-    get_stories(id)
-    post_story(data)
-    put_story(id, data)
-    delete_story(id)
+    get_stories -> response
+    get_stories(id) -> response
+    post_story(data) -> response
+    put_story(id, data) -> response
+    delete_story(id) -> response
 
-Misc variables:
-
-    my_request_controller
 """
 from main.core.request_controller import RequestController
 from main.pivotal.utils.api_constants import HttpMethods as http
@@ -46,11 +43,11 @@ class StoryEndpoints:
     def get_stories(project_id):
         """
         Gets all stories from the project
-
-        Returns
-        ----------
-            response : object
-                the response object, loaded with the list of projects.
+        Args:
+            project_id(int): the id of the
+            project to be retrieved
+        Returns:
+            response(object): the response object
         """
         return RequestController.get_instance().\
             send_request(http.GET.value,
@@ -61,11 +58,14 @@ class StoryEndpoints:
     def get_story(project_id, story_id):
         """
         Gets a specific story from the project
+        Args:
+            project_id(int): the id of the
+            project to be retrieved
+            story_id(int): the id of the
+            story to be retrieved
 
-        Returns
-        ----------
-            response : object
-                the response object, loaded with the selected project's data.
+        Returns:
+            response(object): the response object
         """
         return RequestController.get_instance().\
             send_request(http.GET.value,
@@ -76,17 +76,12 @@ class StoryEndpoints:
     def post_story(project_id, payload_dict):
         """
         Posts a new story
+        Args:
+            project_id(int): the id of the project to be updated
+            payload_dict(dict): the data to create
 
-        Parameters
-        ----------
-            project_id : int
-                the id of the project to be updated
-            payload_dict : dict
-                The data to be sent, encoded in a dictionary
-        Returns
-        ----------
-            response : object
-                the response object.
+        Returns:
+            response(object): the response object
         """
         return RequestController.get_instance().\
             send_request(http.POST.value,
@@ -97,20 +92,15 @@ class StoryEndpoints:
     @staticmethod
     def put_story(project_id, story_id, payload_dict):
         """
-        Updates a specific story
+        Updates a selected story
+        Args:
+            project_id(int): the id of the project to be updated
+            story_id(int): the id of the story to be updated
+            payload_dict(dict): the data to update
 
-        Parameters
-        ----------
-            project_id : int
-                the id of the project to be updated
-            story_id : int
-                the id of the project to be updated
-            payload_dict : dict
-                The data to be sent, encoded in a dictionary
-        Returns
-        ----------
-            response : object
-                the response object.
+        Returns:
+            response(object): the response object
+
         """
         return RequestController.get_instance().\
             send_request(http.PUT.value,
@@ -123,16 +113,11 @@ class StoryEndpoints:
         """
         Deletes a specific story
 
-        Parameters
-        ----------
-            project_id : int
-                the id of the project to be deleted
-            story_id : int
-                the id of the project to be deleted
-        Returns
-        ----------
-            response : object
-                the response object.
+       Args:
+            project_id(int): the id of the project to be updated
+            story_id(int): the id of the story to be deleted
+        Returns:
+            response(object): the response object
         """
         return RequestController.get_instance().\
             send_request(http.DELETE.value,

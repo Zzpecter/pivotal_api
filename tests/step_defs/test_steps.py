@@ -7,7 +7,9 @@ import re
 from assertpy import assert_that
 from pytest_bdd import scenarios, given, when, then, parsers
 from sttable import parse_str_table
+from jsonschema import validate
 from main.core.utils.logger import CustomLogger
+from main.core.utils.file_reader import read_json
 from main.core.utils.table_parser import TableParser as Table_parser
 from main.core.request_controller import RequestController
 from main.core.utils.string_utils import StringUtils as Regex
@@ -46,8 +48,8 @@ def step_send_request(http_method, endpoint, request):
     from the API
 
     Args:
-        http_method (string): http method or verb
-        endpoint (string): endpoint used to interact with request manager
+        http_method (str): http method or verb
+        endpoint (str): endpoint used to interact with request manager
         request (request): request fixture object
     """
 
@@ -69,8 +71,8 @@ def step_verify_response_code(status_code, request):
     """verify response code
 
     Args:
-        status_code (string): status code
-        request (string): request fixture object
+        status_code (str): status code
+        request (str): request fixture object
     """
     expected_status_code = request.config.cache.get('status_code', None)
     assert_that(status_code).is_equal_to(expected_status_code)
@@ -79,11 +81,11 @@ def step_verify_response_code(status_code, request):
 @then(parsers.parse('the response body should be verified with:\n{table}'))
 def step_verify_response_payload(table, request):  # pylint: disable=W0613
     """
-        The function that verify that an inserted table is a subset of the
-        response of the request
-        Args:
-            table (datatable): Table to compare with the response
-            request (string): request fixture object
+    The function that verify that an inserted table is a subset of the
+    response of the request
+    Args:
+        table (datatable): Table to compare with the response
+        request (str): request fixture object
         """
     response = request.config.cache.get('response', None)
     datatable = parse_str_table(table)
@@ -95,10 +97,15 @@ def step_verify_response_payload(table, request):  # pylint: disable=W0613
 
 
 @then(parsers.parse('the response schema should be verified with "{json}"'))
-def step_verify_response_schema(json):  # pylint: disable=W0613
+def step_verify_response_schema(json_template, request):
     """verify response schema
 
     Args:
-        json_template (datatable)
+        json_template(datatable): json to compare the schema
+        request (str): request fixture object
     """
-    LOGGER.info('Not implemented yet')
+    response = request.config.cache.get('response', None)
+    json_schema = read_json(f'./main/pivotal/resources/{json_template}')
+    validate(response, json_schema)  # if it fails it should raise error
+    # (returns nothing)
+    LOGGER.info('schema validation')

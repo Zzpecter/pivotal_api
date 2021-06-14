@@ -11,7 +11,6 @@ Functions:
     log_response()
 
 Misc variables:
-
     url
     header
     last_method_used
@@ -34,10 +33,8 @@ class RequestController:
 
     Attributes
     ----------
-    config_path : str
-        the application-based path to the configuration to be loaded to
-        the RequestController
-
+    config_path(str) : the application-based path to the configuration to be
+    loaded to the RequestController
     Methods
     -------
     send_request(request_method, endpoint, payload:Optional):
@@ -52,12 +49,9 @@ class RequestController:
         """
         Constructs all the necessary attributes for the Request Controller
         object.
-
-        Parameters
-        ----------
-            config_path : str
-                the application-based path to the config file for the API to
-                be used
+        Args:
+            config_path(str): the application-based path to the config
+            file for the API to be used
         """
         self.json_config = read_json(config_path)
         self.url = self.json_config['API_URL']
@@ -74,11 +68,12 @@ class RequestController:
 
     @staticmethod
     def get_instance():
-        """This method gets a singleton instance of the RequestsManager class.
-
-        Returns:
-            RequestManager -- return a instance of RequestsManager class.
         """
+        This function gets a singleton instance of the RequestsManager class.
+        Returns:
+            RequestsManager: instance of RequestsManager class.
+        """
+
         if RequestController.__instance is None:
             RequestController.__instance = RequestController()
         return RequestController.__instance
@@ -86,7 +81,8 @@ class RequestController:
     def return_json(self):
         """
         Function to returns a json from the response
-        Returns: The response is converted to a json object
+        Returns:
+            The response is converted to a json object
 
         """
         try:
@@ -101,21 +97,18 @@ class RequestController:
         """
         Constructs all the necessary attributes for the Request
         Controller object.
+        Args:
+            request_method(str): The HTTP method to
+            be used in the request
+            endpoint(str): the path to the API endpoint
+            that the request will be accessing
+            payload(dict): the optional payload data for
+            sending as json with the request
 
-        Parameters
-        ----------
-            request_method : str
-                The HTTP method to be used in the request
-            endpoint : str
-                the path to the API endpoint that the request will be accessing
-            payload : dict
-                the optional payload data for sending as json with the request
+        Returns:
+            response(object):the response object, sent back
+            as a result from the HTTP request performed
 
-        Returns
-        ----------
-            response : object
-                the response object, sent back as a result from the HTTP
-                request performed
         """
         self.last_method_used = request_method
         if request_method in ['PUT', 'POST']:

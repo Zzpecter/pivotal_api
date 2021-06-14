@@ -7,15 +7,12 @@ Classes:
 
 Functions:
 
-    get_projects
-    get_project(id)
-    post_project(data)
-    put_project(id, data)
-    delete_project(id)
+    get_projects -> response
+    get_project(id) -> response
+    post_project(data) -> response
+    put_project(id, data) -> response
+    delete_project(id) -> response
 
-Misc variables:
-
-    my_request_controller
 """
 from main.core.request_controller import RequestController
 from main.pivotal.utils.api_constants import HttpMethods as http
@@ -47,10 +44,8 @@ class ProjectEndpoints:
         """
         Gets all projects from the user
 
-        Returns
-        ----------
-            response : object
-                the response object, loaded with the list of projects.
+        Returns:
+            response(object): the response object
         """
         return RequestController.get_instance().\
             send_request(http.GET.value,
@@ -62,10 +57,10 @@ class ProjectEndpoints:
         """
         Gets a specific project from the user
 
-        Returns
-        ----------
-            response : object
-                the response object, loaded with the selected project's data.
+       Args:
+            project_id(int): the id of the project to be created
+        Returns:
+            response(object): the response object
         """
         return RequestController.get_instance().\
             send_request(http.GET.value,
@@ -76,14 +71,10 @@ class ProjectEndpoints:
         """
         Posts a new project
 
-        Parameters
-        ----------
-            payload_dict : dict
-                The data to be sent, encoded in a dictionary
-        Returns
-        ----------
-            response : object
-                the response object.
+       Args:
+            payload_dict(dict):the data to create
+        Returns:
+            response(object): the response object
         """
         return RequestController.get_instance().\
             send_request(http.POST.value,
@@ -95,16 +86,11 @@ class ProjectEndpoints:
         """
         Updates a specific project
 
-        Parameters
-        ----------
-            project_id : int
-                the id of the project to be updated
-            payload_dict : dict
-                The data to be sent, encoded in a dictionary
-        Returns
-        ----------
-            response : object
-                the response object.
+       Args:
+            project_id(int): the id of the project to be deleted
+            payload_dict(dict):the data to update
+        Returns:
+            response(object): the response object
         """
         return RequestController.get_instance().\
             send_request(http.PUT.value,
@@ -116,14 +102,10 @@ class ProjectEndpoints:
         """
         Deletes a specific project
 
-        Parameters
-        ----------
-            project_id : int
-                the id of the project to be updated
-        Returns
-        ----------
-            response : object
-                the response object.
+       Args:
+            project_id(int): the id of the project to be deleted
+        Returns:
+            response(object): the response object
         """
         return RequestController.get_instance().\
             send_request(http.DELETE.value,

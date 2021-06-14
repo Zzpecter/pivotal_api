@@ -8,7 +8,6 @@ Functions:
     read_yaml(file) -> dict
 
 Misc variables:
-
     file
 """
 import json
@@ -19,16 +18,11 @@ from main.pivotal.utils.api_constants import DEFAULT_FILE
 def read_json(file=DEFAULT_FILE):
     """
     Helper function for reading JSON files
+    Args:
+        file(str): Path to the file to be read
 
-    Parameters
-    ----------
-        file : str
-            Path to the file to be read
-
-    Returns
-    ----------
-        data : dict
-            Dict-parsed data of the JSON file read
+    Returns:
+        data(dict): Dict-parsed data of the JSON file read
     """
     with open(file) as file_stream:
         data = json.load(file_stream)
@@ -38,17 +32,13 @@ def read_json(file=DEFAULT_FILE):
 def read_yaml(file=DEFAULT_FILE):
     """
     Helper function for reading YAML files
+    Args:
+        file(str): Path to the file to be read
 
-    Parameters
-    ----------
-        file : str
-            Path to the file to be read
-
-    Returns
-    ----------
-        data : dict
-            Dict-parsed data of the YAML file read
+    Returns:
+        data(dict):Dict-parsed data of the YAML file read
     """
+
     with open(file, 'r') as file_stream:
         data = yaml.safe_load(file_stream.read())
     return data

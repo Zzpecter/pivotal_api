@@ -21,11 +21,12 @@ scenarios('../features/pivotal_projects.feature')
 @given(parsers.parse('the "{http_method}" request to "{endpoint}" is sent'))
 @when(parsers.parse('the "{http_method}" request to "{endpoint}" is sent'))
 def step_send_request(http_method, endpoint, request):
-    """[summary]
-
+    """
+    The function that executes the request controller and receives the response
+    from the API
     Args:
-        http_method (string): http method or verb
-        endpoint (string): endpoint used to interact with request manager
+        http_method (str): http method or verb
+        endpoint (str): endpoint used to interact with request manager
         request (request): request fixture object
     """
 
@@ -48,8 +49,9 @@ def step_send_request(http_method, endpoint, request):
 
 @given(parsers.parse('the following request body parameters:\n{body}'))
 def step_set_body_parameters(datatable, body, request):
-    """set body parameters
-
+    """
+    The function that retrieves a table from the scenario and
+    creates a body for the request to the API
     Args:
         datatable (datatable): kind of class object to interact with datatables
         body (datatable): body datatable composed by keys and values
@@ -71,8 +73,8 @@ def step_verify_response_code(status_code, request):
     """verify response code
 
     Args:
-        status_code (string): status code
-        request (string): request fixture object
+        status_code (str): status code
+        request (str): request fixture object
     """
     expected_status_code = request.config.cache.get('status_code', None)
     assert_that(status_code).is_equal_to(expected_status_code)
@@ -80,12 +82,13 @@ def step_verify_response_code(status_code, request):
 
 @then(parsers.parse('the response body should be verified with:\n{table}'))
 def step_verify_response_payload(table, request):  # pylint: disable=W0613
-    """verify response payload
-
-    Args:
-        table (datatable)
-        request (string): request fixture object
     """
+    The function that verify that an inserted table is a subset of the
+    response of the request
+    Args:
+        table (datatable): Table to compare with the response
+        request (str): request fixture object
+        """
     response = request.config.cache.get('response', None)
 
     datatable = parse_str_table(table)
@@ -104,8 +107,8 @@ def step_verify_response_schema(json_template, request):  # pylint:
     """verify response schema
 
     Args:
-        table (datatable)
-        request (string): request fixture object
+        json_template(datatable): json to compare the schema
+        request (str): request fixture object
     """
     response = request.config.cache.get('response', None)
     json_schema = read_json(f'./main/pivotal/resources/{json_template}')

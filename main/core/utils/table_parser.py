@@ -20,9 +20,12 @@ class TableParser:
     def parse_to_dict(keys, values):
         """
         parses the keys and values of a table to a dict.
-        :param keys: list of keys
-        :param values: list of values
-        :return: dict: dictionary containing keys:values
+        Args:
+            keys(list): list of keys
+            values(list): list of values
+
+        Returns:
+            dict: dictionary containing keys:values
         """
         body_dict = {}
         for key, value in zip(keys, values):
