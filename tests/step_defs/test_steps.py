@@ -79,7 +79,7 @@ def step_verify_response_code(status_code, request):
 
 
 @then(parsers.parse('the response body should be verified with:\n{table}'))
-def step_verify_response_payload(table, request):  # pylint: disable=W0613
+def step_verify_response_payload(table, request):
     """
     The function that verify that an inserted table is a subset of the
     response of the request
@@ -106,6 +106,5 @@ def step_verify_response_schema(json_template, request):
     """
     response = request.config.cache.get('response', None)
     json_schema = read_json(f'./main/pivotal/resources/{json_template}')
-    validate(response, json_schema)  # if it fails it should raise error
-    # (returns nothing)
+    validate(response, json_schema)
     LOGGER.info('schema validation')

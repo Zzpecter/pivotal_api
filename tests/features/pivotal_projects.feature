@@ -19,14 +19,14 @@ Feature: Pivotal API Service
   Scenario: Post Project
     Given the following request body parameters:
       | key               | value               |
-      | name              | BDD-Test-Project    |
+      | name              | AUTO_NEW_PROJECT    |
       | iteration_length  | 2                   |
       | week_start_day    | Monday              |
     When the "POST" request to "/projects" is sent
     Then the response status code should be 200
     And the response body should be verified with:
       | key               | value               |
-      | name              | BDD-Test-Project    |
+      | name              | AUTO_NEW_PROJECT    |
       | iteration_length  | 2                   |
       | week_start_day    | Monday              |
     And the response schema should be verified with "schema_projects.json"
@@ -36,14 +36,14 @@ Feature: Pivotal API Service
   Scenario: Put Project
     Given the following request body parameters:
       | key               | value               |
-      | name              | BDD-Update-Project  |
+      | name              | AUTO_UPDATED_PROJECT|
       | iteration_length  | 3                   |
       | week_start_day    | Saturday            |
     When the "PUT" request to "/projects/<id>" is sent
     Then the response status code should be 200
     And the response body should be verified with:
       | key               | value               |
-      | name              | BDD-Update-Project  |
+      | name              | AUTO_UPDATED_PROJECT|
       | iteration_length  | 3                   |
       | week_start_day    | Saturday            |
 
