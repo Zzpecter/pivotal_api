@@ -36,3 +36,15 @@ class StringUtils:
 
         """
         return re.sub(pattern, replace_string, base_string)
+
+    @staticmethod
+    def search_text_between_tags(text):
+        """
+        Method for searching and extracting text between tags from an input.
+
+        Args:
+        text: input text for searching
+        Returns:
+        list: all the text between tags '<>'
+        """
+        return re.findall("<(.*?)>", text, re.DOTALL)

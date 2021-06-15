@@ -7,6 +7,7 @@ from main.core.utils.logger import CustomLogger
 from main.core.utils.file_reader import read_json
 from main.core.request_controller import RequestController
 
+
 LOGGER = CustomLogger('test_logger')
 REQUEST_CONTROLLER = RequestController()
 
@@ -51,7 +52,7 @@ def build_endpoint(current_endpoint):
     """
     built_endpoint = ''
     dependencies = []
-    for point, dependency in ENDPOINT_DEPENDENCIES:
+    for point, dependency in ENDPOINT_DEPENDENCIES.items():
         if point == current_endpoint:
             if isinstance(dependency, str):
                 dependencies.append(dependency)
@@ -102,8 +103,9 @@ def pytest_bdd_before_scenario(request, scenario):
                 request_method='POST',
                 endpoint=endpoint,
                 payload=payload_dict)
-            request.config.cache.set(f'{endpoint_id}', response['id'])
-            LOGGER.info(f"NEW CACHE ENTRY: {endpoint_id} - {response['id']}")
+            request.config.cache.set(f'{endpoint_id}', response.json()['id'])
+            LOGGER.info(f"NEW CACHE ENTRY: {endpoint_id} - "
+                        f"{response.json()['id']}")
             if f'{endpoint_id}' not in CACHE_TAGS:
                 CACHE_TAGS.append(f'{endpoint_id}')
 
@@ -131,7 +133,7 @@ def pytest_bdd_after_scenario(request, scenario):
 
     for tag in scenario.tags:
         if "delete" in tag:
-            element_id = request.config.cache.get('project_id', None)
+            element_id = request.config.cache.get('response', None)['id']
             REQUEST_CONTROLLER.send_request(request_method='DELETE',
                                             endpoint=f"/{tag.split('_')[-1]}/"
                                                      f"{element_id}")
