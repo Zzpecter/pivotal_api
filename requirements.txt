@@ -1,0 +1,10 @@
+requests
+pyyaml
+assertpy
+pytest
+flake8
+pylint
+pycodestyle
+pytest_bdd
+sttable
+jsonschema

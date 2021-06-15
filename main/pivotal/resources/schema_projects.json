@@ -1,0 +1,36 @@
+{
+    "type" : "object",
+    "properties" : {
+      "account_id": {"type": "number"},
+      "atom_enabled": {"type": "boolean"},
+      "automatic_planning": {"type": "boolean"},
+      "bugs_and_chores_are_estimatable": {"type": "boolean"},
+      "created_at": {"type": "string"},
+      "current_iteration_number": {"type": "number"},
+      "enable_following": {"type": "boolean"},
+      "enable_incoming_emails": {"type": "boolean"},
+      "enable_tasks": {"type": "boolean"},
+      "has_google_domain": {"type": "boolean"},
+      "id": {"type": "number"},
+      "initial_velocity": {"type": "number"},
+      "iteration_length": {"type": "number"},
+      "kind":  {"type": "string"},
+      "name":  {"type": "string"},
+      "number_of_done_iterations_to_show": {"type": "number"},
+      "point_scale":  {"type": "string"},
+      "point_scale_is_custom": {"type": "boolean"},
+      "project_type":  {"type": "string"},
+      "public": {"type": "boolean"},
+      "start_time":  {"type": "string"},
+      "time_zone":
+      {
+      "kind": {"type": "string"},
+      "olson_name": {"type": "string"},
+      "offset": {"type": "string"}
+      },
+      "updated_at": {"type": "string"},
+      "velocity_averaged_over": {"type": "number"},
+      "version": {"type": "number"},
+      "week_start_day":  {"type": "string"}
+    }
+}

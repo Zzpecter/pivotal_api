@@ -1,0 +1,29 @@
+image: "python:3.8-alpine"
+
+
+before_script:
+  - python --version
+  - pip install -r requirements.txt
+
+stages:
+  - Static Analysis
+
+flake8:
+  stage: Static Analysis
+  script:
+    - flake8 tests/
+    - flake8 main/
+
+
+pylint:
+  stage: Static Analysis
+  script:
+    - pylint tests/
+    - pylint main/
+
+
+pycodestyle:
+  stage: Static Analysis
+  script:
+    - pycodestyle tests/
+    - pycodestyle main/
