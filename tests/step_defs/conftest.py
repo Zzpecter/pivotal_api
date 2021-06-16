@@ -7,7 +7,7 @@ from main.core.utils.logger import CustomLogger
 from main.core.utils.file_reader import read_json
 from main.core.request_controller import RequestController
 from main.pivotal.utils.api_constants import HttpMethods as http
-from main.pivotal.utils.api_constants import ENDPOINT_IDENTIFIERS, ENDPOINT_DEPENDENCIES
+from main.pivotal.utils.api_constants import ENDPOINT_IDENTIFIERS
 from main.pivotal.utils.api_utils import build_endpoint, sort_tags_by_depth
 from main.core.utils.string_utils import StringUtils as str_utils
 
@@ -54,7 +54,8 @@ def pytest_bdd_before_scenario(request, scenario):
             payload_dict = read_json(
                 f'./main/pivotal/resources/payload_{endpoint[1:]}.json')
 
-            tags_to_replace = str_utils.search_text_between_tags(built_endpoint)
+            tags_to_replace = str_utils.\
+                search_text_between_tags(built_endpoint)
 
             LOGGER.debug(f'Tags found:  {tags_to_replace}')
             LOGGER.debug(f'un-processed endpoint:  {built_endpoint}')
@@ -106,7 +107,6 @@ def pytest_bdd_after_scenario(request, scenario):
 
     for tag in scenario.tags:
         if "delete" in tag:
-            endpoint_name = f"{tag.split('_')[-1]}"
             # element_id = request.config.cache.get('project_id', None)
 
             element_id = request.config.cache.get('project_id', None)
