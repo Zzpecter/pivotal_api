@@ -1,11 +1,11 @@
 @api
-Feature: Pivotal API Service
+Feature: Pivotal API Projects Service
   As an application developer,
-  I want to get responses from a REST API,
+  I want to query the Projects of the Pivotal API,
   So that my app can consume those responses.
 
 
-  @pivotal @service @get_projects @cache_clear
+  @pivotal @service @get_projects
   Scenario: Get Projects
     Given the "GET" request to "/projects" is sent
     Then the response status code should be 200

@@ -41,9 +41,6 @@ def pytest_bdd_before_scenario(request, scenario):
     for tag in scenario.tags:
         LOGGER.info(f"PRE-CONDITION: TAG: {tag}")
         if "create" in tag:
-            #get dependencies
-            #build endpoint
-            #replace ids
             endpoint = f"/{tag.split('_')[-1]}"
             LOGGER.info(f"PRE-CONDITION: Create - raw: {endpoint}")
             built_endpoint = build_endpoint(endpoint[1:])

@@ -1,0 +1,17 @@
+{
+    "type" : "object",
+    "properties" : {
+      "created_at": {"type": "string"},
+      "current_state": {"type": "string"},
+      "id": {"type": "number"},
+      "kind": {"type": "string"},
+      "labels":{"type": "array"},
+      "name": {"type": "string"},
+      "owner_ids":{"type": "array"},
+      "project_id": {"type": "number"},
+      "requested_by_id": {"type": "number"},
+      "story_type": {"type": "string"},
+      "updated_at": {"type": "string"},
+      "url": {"type": "string"}
+    }
+}
