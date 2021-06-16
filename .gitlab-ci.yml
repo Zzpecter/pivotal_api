@@ -1,19 +1,29 @@
-image: "python:3.8"
+image: "python:3.8-alpine"
 
 
 before_script:
-  - python3 --version
-  - pip3 install -r requirements.txt
+  - python --version
+  - pip install -r requirements.txt
 
 stages:
-  - SCA
+  - Static Analysis
 
-static_code_analysis:
-  stage: SCA
+flake8:
+  stage: Static Analysis
   script:
-    - python3 -m flake8 tests/
-    - python3 -m flake8 main/
-    - python3 -m pylint tests/
-    - python3 -m pylint main/
-    - python3 -m pycodestyle tests/
-    - python3 -m pycodestyle main/
+    - flake8 tests/
+    - flake8 main/
+
+
+pylint:
+  stage: Static Analysis
+  script:
+    - pylint tests/
+    - pylint main/
+
+
+pycodestyle:
+  stage: Static Analysis
+  script:
+    - pycodestyle tests/
+    - pycodestyle main/
