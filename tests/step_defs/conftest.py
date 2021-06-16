@@ -8,14 +8,10 @@ from main.core.utils.file_reader import read_json
 from main.core.request_controller import RequestController
 from main.pivotal.utils.api_constants import ENDPOINT_IDENTIFIERS, ENDPOINT_DEPENDENCIES
 from main.pivotal.utils.api_utils import build_endpoint
+from tests.utils.constants import CACHE_TAGS
 
 LOGGER = CustomLogger('test_logger')
 REQUEST_CONTROLLER = RequestController()
-
-CACHE_TAGS = ['body', 'response', 'status_code']
-
-GLOBAL_CONTEXT = None
-SCENARIO_TAGS = None
 
 
 @pytest.fixture(autouse=True, scope='module')
