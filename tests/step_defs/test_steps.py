@@ -15,9 +15,9 @@ from main.core.request_controller import RequestController
 from main.core.utils.string_utils import StringUtils as Regex
 
 LOGGER = CustomLogger(name='api-logger')
-my_request_controller = RequestController()
 
 scenarios('../features/pivotal_epic_api.feature')
+scenarios('../features/pivotal_iterations_api.feature')
 
 
 @given(parsers.parse('the following body parameters:\n{body}'))
@@ -42,6 +42,7 @@ def step_set_body_parameters(datatable, body, request):
 
 @given(parsers.parse('the "{http_method}" request to "{endpoint}" is sent'))
 @when(parsers.parse('the "{http_method}" request to "{endpoint}" is sent'))
+@then(parsers.parse('the "{http_method}" request to "{endpoint}" is sent'))
 def step_send_request(http_method, endpoint, request):
     """
     The function that executes the request controller and receives the response
@@ -92,8 +93,11 @@ def step_verify_response_payload(table, request):
     body_dict = Table_parser. \
         parse_to_dict(keys=datatable.columns['key'],
                       values=datatable.columns['value'])
-
-    assert_that(body_dict.items() <= response.items()).is_equal_to(True)
+    if isinstance(response, dict):
+        assert_that(body_dict.items() <= response.items()).is_true()
+    elif isinstance(response, list):
+        for item in response:
+            assert_that(body_dict.items() <= item.items()).is_true()
 
 
 @then(parsers.parse('the response schema should be verified with "{json}"'))

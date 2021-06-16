@@ -3,6 +3,7 @@ from enum import Enum
 
 CONFIG_PATH = "main/pivotal/resources/config.json"
 DEFAULT_FILE = "main/pivotal/resources/payload_projects.json"
+INT_KEY_LIST = ['iteration_length', 'length']
 
 
 class HttpMethods(Enum):

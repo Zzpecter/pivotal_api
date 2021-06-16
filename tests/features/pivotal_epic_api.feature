@@ -5,12 +5,15 @@ Feature: API Pivotal service
   So that my app can get answers anywhere.
 
   @pivotal @fixture_create_epics @fixture_delete_projects
-  Scenario: Get all epics of a project
-    Given the "GET" request to "/projects/<projects_id>/epics" is sent
+  Scenario: Get all epics
+    When the "GET" request to "/projects/<projects_id>/epics" is sent
     Then the response status code should be 200
+    And the response body should be verified with:
+      | key               | value               |
+      | name              | AUTO_NEW_EPIC       |
 
-  @pivotal @fixture_create_epics @fixture_delete_projects
-  Scenario: Post a new epic
+  @pivotal @fixture_create_projects @fixture_delete_projects
+  Scenario: Post an epic to project
     Given the following body parameters:
       | key               | value               |
       | name              | AUTO_NEW_EPIC       |
@@ -21,12 +24,15 @@ Feature: API Pivotal service
       | name              | AUTO_NEW_EPIC       |
 
   @pivotal @fixture_create_epics @fixture_delete_projects
-  Scenario: Get a specific epic of a project
-    Given the "GET" request to "/projects/<projects_id>/epics/<epics_id>" is sent
+  Scenario: Get an epic from project
+    When the "GET" request to "/projects/<projects_id>/epics/<epics_id>" is sent
     Then the response status code should be 200
+    And the response body should be verified with:
+      | key               | value               |
+      | name              | AUTO_NEW_EPIC       |
 
   @pivotal @fixture_create_epics @fixture_delete_projects
-  Scenario: Put updates a specific epic of a project
+  Scenario: Put an epic to project
     Given the following body parameters:
       | key               | value                |
       | name              | AUTO_UPDATED_EPIC    |
@@ -37,11 +43,16 @@ Feature: API Pivotal service
       | name              | AUTO_UPDATED_EPIC   |
 
   @pivotal @fixture_create_epics @fixture_delete_projects
-  Scenario: Delete a specific epic of a project
-    Given the "DELETE" request to "/projects/<projects_id>/epics/<epics_id>" is sent
+  Scenario: Delete an epic from project
+    When the "DELETE" request to "/projects/<projects_id>/epics/<epics_id>" is sent
     Then the response status code should be 204
+    Then the "GET" request to "/projects/<projects_id>/epics/<epics_id>" is sent
+    And the response status code should be 404
 
   @pivotal @fixture_create_epics @fixture_delete_projects
-  Scenario: Get an individual epic
-    Given the "GET" request to "/epics/<epics_id>" is sent
+  Scenario: Get an epic
+    When the "GET" request to "/epics/<epics_id>" is sent
     Then the response status code should be 200
+    And the response body should be verified with:
+      | key               | value               |
+      | name              | AUTO_NEW_EPIC       |
