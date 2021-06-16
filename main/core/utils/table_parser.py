@@ -10,6 +10,7 @@ Functions:
     parse_to_dict(keys, values) -> dict
 
 """
+from main.pivotal.utils.api_constants import INT_KEY_LIST
 
 
 class TableParser:
@@ -29,7 +30,7 @@ class TableParser:
         """
         body_dict = {}
         for key, value in zip(keys, values):
-            if key == 'iteration_length':
+            if key in INT_KEY_LIST:
                 value = int(value)
             body_dict.update({key: value})
         return body_dict
