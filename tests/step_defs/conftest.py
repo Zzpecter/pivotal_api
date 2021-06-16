@@ -8,7 +8,7 @@ from main.core.utils.file_reader import read_json
 from main.core.request_controller import RequestController
 from main.pivotal.utils.api_constants import HttpMethods as http
 from main.pivotal.utils.api_constants import ENDPOINT_IDENTIFIERS, ENDPOINT_DEPENDENCIES
-from main.pivotal.utils.api_utils import build_endpoint
+from main.pivotal.utils.api_utils import build_endpoint, sort_tags_by_depth
 from main.core.utils.string_utils import StringUtils as str_utils
 
 from tests.utils.constants import CACHE_TAGS
@@ -38,12 +38,17 @@ def pytest_bdd_before_scenario(request, scenario):
         scenario (object): scenario object of pytest bdd
     """
     LOGGER.info(f"=============STARTED SCENARIO {scenario.name}")
-    for tag in scenario.tags:
+    LOGGER.debug(f"TAGS FOUND:  {scenario.tags}")
+
+    scenario_tags = sort_tags_by_depth(scenario.tags)
+    LOGGER.debug(f"SORTED TAGS:  {scenario_tags}")
+    for tag in scenario_tags:
         LOGGER.info(f"PRE-CONDITION: TAG: {tag}")
         if "create" in tag:
-            endpoint = f"/{tag.split('_')[-1]}"
+            endpoint_name = f"{tag.split('_')[-1]}"
+            endpoint = f"/{endpoint_name}"
             LOGGER.info(f"PRE-CONDITION: Create - raw: {endpoint}")
-            built_endpoint = build_endpoint(endpoint[1:])
+            built_endpoint = build_endpoint(endpoint_name)
             LOGGER.info(f"PRE-CONDITION: Create - built: {built_endpoint}")
 
             payload_dict = read_json(
@@ -55,12 +60,12 @@ def pytest_bdd_before_scenario(request, scenario):
             LOGGER.debug(f'un-processed endpoint:  {built_endpoint}')
 
             for txt in tags_to_replace:
-                endpoint = str_utils.replace_string(built_endpoint,
-                                                    str(request.config.cache.
-                                                        get(txt, None)),
-                                                    f'<{txt}>'
-                                                    )
-                LOGGER.debug(f'WORKING on tags:  {endpoint}')
+                built_endpoint = str_utils.\
+                    replace_string(built_endpoint,
+                                   str(request.config.cache.get(txt, None)),
+                                   f'<{txt}>')
+
+                LOGGER.debug(f'WORKING on tags:  {built_endpoint}')
 
             LOGGER.info(f"PRE-CONDITION: Create - complete: {built_endpoint}")
 
@@ -68,7 +73,7 @@ def pytest_bdd_before_scenario(request, scenario):
                 request_method=http.POST.value,
                 endpoint=built_endpoint,
                 payload=payload_dict)
-            request.config.cache.set(f'{ENDPOINT_IDENTIFIERS[endpoint[1:]]}',
+            request.config.cache.set(f'{ENDPOINT_IDENTIFIERS[endpoint_name]}',
                                      response.json()['id'])
             CACHE_TAGS.append(f'{endpoint[1:]}_id')
             LOGGER.info(f"ADDED CACHE ENTRY: "
@@ -101,11 +106,14 @@ def pytest_bdd_after_scenario(request, scenario):
 
     for tag in scenario.tags:
         if "delete" in tag:
+            endpoint_name = f"{tag.split('_')[-1]}"
             # element_id = request.config.cache.get('project_id', None)
-            element_id = request.config.cache.get('response', None)['id']
+
+            element_id = request.config.cache.get('project_id', None)
+
             RequestController.get_instance().\
                 send_request(request_method=http.DELETE.value,
-                             endpoint=f"/{tag.split('_')[-1]}/{element_id}")
+                             endpoint=f"/projects/{element_id}")
 
     for tag in CACHE_TAGS:
         if request.config.cache.get(tag, None) is not None:

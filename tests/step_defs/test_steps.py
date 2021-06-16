@@ -16,6 +16,7 @@ LOGGER = CustomLogger('test_logger')
 
 
 scenarios('../features/pivotal_projects.feature')
+scenarios('../features/pivotal_stories.feature')
 
 
 @given(parsers.parse('the "{http_method}" request to "{endpoint}" is sent'))
@@ -48,6 +49,7 @@ def step_send_request(http_method, endpoint, request):
     LOGGER.debug(f'processed endpoint:  {endpoint}')
 
     body = request.config.cache.get('body', None)
+    LOGGER.debug(f'body:  {body}')
 
     status_code, response = RequestController.get_instance().send_request(
             request_method=http_method,
