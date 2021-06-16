@@ -1,0 +1,22 @@
+{
+  "name": "Pivotal API Testing Framework",
+  "description": "Python based API testing framework for performing automated testing on the pivotal-tracker website",
+  "homepage": "https://gitlab.com/atbootcamppython/pivotalframework/",
+  "keywords": ["API", "Pivotal", "AT", "AUTO", "AUTOMATION"],
+  "contributors": [
+    {
+      "name": "Rene Vilar",
+      "url": "https://github.com/Zzpecter"
+    },
+    {
+      "name": "Andres Duarte",
+      "url": "https://github.com/andresduarter22"}
+  ],
+  "dependencies": {
+    "cucumber-html-reporter": "*"
+  },
+  "repository": {"type": "git", "url":  "https://gitlab.com/atbootcamppython/pivotalframework.git"},
+  "main": "report_generator.js",
+  "version": "0.0.1"
+
+}
