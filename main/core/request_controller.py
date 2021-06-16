@@ -78,21 +78,6 @@ class RequestController:
             RequestController.__instance = RequestController()
         return RequestController.__instance
 
-    def return_json(self):
-        """
-        Function to returns a json from the response
-        Returns:
-            The response is converted to a json object
-
-        """
-        try:
-            self.response.raise_for_status()
-        except requests.exceptions.HTTPError as http_exception:
-            return "Error: " + str(http_exception)
-
-        json_object = self.response.json()
-        return json_object
-
     def send_request(self, request_method, endpoint, payload=None):
         """
         Constructs all the necessary attributes for the Request

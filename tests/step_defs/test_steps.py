@@ -1,26 +1,66 @@
 """
-This module contains step definitions for boards_api.feature.
-It uses the requests package:
-http://docs.python-requests.org/
+This module contains step definitions for pivotal_projects.feature.
 """
-import re
 from assertpy import assert_that
 from pytest_bdd import scenarios, given, when, then, parsers
 from sttable import parse_str_table
 from jsonschema import validate
-from main.core.utils.logger import CustomLogger
 from main.core.utils.file_reader import read_json
-from main.core.utils.table_parser import TableParser as Table_parser
+from main.core.utils.logger import CustomLogger
+from main.core.utils.table_parser import TableParser
+from main.core.utils.string_utils import StringUtils as str_utils
+from main.pivotal.utils.api_constants import HttpMethods as http
 from main.core.request_controller import RequestController
-from main.core.utils.string_utils import StringUtils as Regex
 
-LOGGER = CustomLogger(name='api-logger')
-my_request_controller = RequestController()
-
-scenarios('../features/pivotal_epic_api.feature')
+LOGGER = CustomLogger('test_logger')
 
 
-@given(parsers.parse('the following body parameters:\n{body}'))
+scenarios('../features/pivotal_projects.feature')
+
+
+@given(parsers.parse('the "{http_method}" request to "{endpoint}" is sent'))
+@when(parsers.parse('the "{http_method}" request to "{endpoint}" is sent'))
+def step_send_request(http_method, endpoint, request):
+    """
+    The function that executes the request controller and receives the response
+    from the API
+    Args:
+        http_method (str): http method or verb
+        endpoint (str): endpoint used to interact with request manager
+        request (request): request fixture object
+    """
+
+    tags_to_replace = str_utils.search_text_between_tags(endpoint)
+
+    LOGGER.debug(f'Tags found:  {tags_to_replace}')
+    LOGGER.debug(f'un-processed endpoint:  {endpoint}')
+
+    for tag in tags_to_replace:
+        LOGGER.debug(f'found id for endpoint: '
+                     f'{request.config.cache.get(tag, None)}')
+        endpoint = str_utils.replace_string(endpoint,
+                                            str(request.config.cache.get(
+                                                tag, None)),
+                                            f'<{tag}>'
+                                            )
+        LOGGER.debug(f'WORKING on tags:  {endpoint}')
+
+    LOGGER.debug(f'processed endpoint:  {endpoint}')
+
+    body = request.config.cache.get('body', None)
+
+    status_code, response = RequestController.get_instance().send_request(
+            request_method=http_method,
+            endpoint=endpoint,
+            payload=body)
+
+    LOGGER.info(f'RESPONSE  {response}')
+    request.config.cache.set('status_code', status_code)
+    if http_method != http.DELETE.value:
+        request.config.cache.set('response', response.json())
+
+
+@given(parsers.parse('the following request body parameters:\n{body}'))
 def step_set_body_parameters(datatable, body, request):
     """
     The function that retrieves a table from the scenario and
@@ -32,41 +72,16 @@ def step_set_body_parameters(datatable, body, request):
     """
     datatable.body = parse_str_table(body)
 
-    body_dict = Table_parser. \
+    body_dict = TableParser.\
         parse_to_dict(keys=datatable.body.columns['key'],
                       values=datatable.body.columns['value'])
 
     request.config.cache.set('body', body_dict)
+
     LOGGER.info(f'BODY TABLE: {request.config.cache.get("body", None)}')
 
 
-@given(parsers.parse('the "{http_method}" request to "{endpoint}" is sent'))
-@when(parsers.parse('the "{http_method}" request to "{endpoint}" is sent'))
-def step_send_request(http_method, endpoint, request):
-    """
-    The function that executes the request controller and receives the response
-    from the API
-
-    Args:
-        http_method (str): http method or verb
-        endpoint (str): endpoint used to interact with request manager
-        request (request): request fixture object
-    """
-
-    endpoint_name = re.findall(r"<(\w+)>", endpoint)
-    body = request.config.cache.get('body', None)
-
-    for replace_item in endpoint_name:
-        tag_value = str(request.config.cache.get(replace_item, None))
-        endpoint = Regex.replace_string(endpoint,
-                                        tag_value, f'<{replace_item}>')
-    status_code, response = RequestController.get_instance().\
-        send_request(http_method, endpoint, body)
-    request.config.cache.set('response', response)
-    request.config.cache.set('status_code', str(status_code))
-
-
-@then(parsers.parse('the response status code should be {status_code}'))
+@then(parsers.parse('the response status code should be {status_code:d}'))
 def step_verify_response_code(status_code, request):
     """verify response code
 
@@ -88,15 +103,18 @@ def step_verify_response_payload(table, request):
         request (str): request fixture object
         """
     response = request.config.cache.get('response', None)
+
     datatable = parse_str_table(table)
-    body_dict = Table_parser. \
+
+    body_dict = TableParser. \
         parse_to_dict(keys=datatable.columns['key'],
                       values=datatable.columns['value'])
 
     assert_that(body_dict.items() <= response.items()).is_equal_to(True)
 
 
-@then(parsers.parse('the response schema should be verified with "{json}"'))
+@then(parsers.parse(
+    'the response schema should be verified with "{json_template}"'))
 def step_verify_response_schema(json_template, request):
     """verify response schema
 

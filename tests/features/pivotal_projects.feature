@@ -12,7 +12,7 @@ Feature: Pivotal API Service
 
   @pivotal @service @get_project @fixture_create_projects @fixture_delete_projects
   Scenario: Get Project
-    When the "GET" request to "/projects/<id>" is sent
+    When the "GET" request to "/projects/<project_id>" is sent
     Then the response status code should be 200
 
   @pivotal @service @post_project @fixture_delete_projects
@@ -39,7 +39,7 @@ Feature: Pivotal API Service
       | name              | AUTO_UPDATED_PROJECT|
       | iteration_length  | 3                   |
       | week_start_day    | Saturday            |
-    When the "PUT" request to "/projects/<id>" is sent
+    When the "PUT" request to "/projects/<project_id>" is sent
     Then the response status code should be 200
     And the response body should be verified with:
       | key               | value               |
@@ -49,5 +49,5 @@ Feature: Pivotal API Service
 
   @pivotal @service @del_project @fixture_create_projects
   Scenario: Delete Project
-    When the "DELETE" request to "/projects/<id>" is sent
+    When the "DELETE" request to "/projects/<project_id>" is sent
     Then the response status code should be 204

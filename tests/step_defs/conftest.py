@@ -6,14 +6,14 @@ import pytest
 from main.core.utils.logger import CustomLogger
 from main.core.utils.file_reader import read_json
 from main.core.request_controller import RequestController
-from main.pivotal.utils.api_constants import HttpMethods as Methods
+from main.pivotal.utils.api_constants import HttpMethods as http
+from main.pivotal.utils.api_constants import ENDPOINT_IDENTIFIERS, ENDPOINT_DEPENDENCIES
+from main.pivotal.utils.api_utils import build_endpoint
+from main.core.utils.string_utils import StringUtils as str_utils
+
+from tests.utils.constants import CACHE_TAGS
 
 LOGGER = CustomLogger('test_logger')
-
-CACHE_TAGS = ['body', 'id', 'response', 'status_code']
-
-GLOBAL_CONTEXT = None
-SCENARIO_TAGS = None
 
 
 @pytest.fixture(autouse=True, scope='module')
@@ -39,21 +39,44 @@ def pytest_bdd_before_scenario(request, scenario):
     """
     LOGGER.info(f"=============STARTED SCENARIO {scenario.name}")
     for tag in scenario.tags:
+        LOGGER.info(f"PRE-CONDITION: TAG: {tag}")
         if "create" in tag:
-            LOGGER.info("BEFORE SCENARIO: "
-                        f"{request.config.cache.get('endpoint', None)}")
+            #get dependencies
+            #build endpoint
+            #replace ids
             endpoint = f"/{tag.split('_')[-1]}"
+            LOGGER.info(f"PRE-CONDITION: Create - raw: {endpoint}")
+            built_endpoint = build_endpoint(endpoint[1:])
+            LOGGER.info(f"PRE-CONDITION: Create - built: {built_endpoint}")
 
             payload_dict = read_json(
                 f'./main/pivotal/resources/payload_{endpoint[1:]}.json')
 
+            tags_to_replace = str_utils.search_text_between_tags(built_endpoint)
+
+            LOGGER.debug(f'Tags found:  {tags_to_replace}')
+            LOGGER.debug(f'un-processed endpoint:  {built_endpoint}')
+
+            for txt in tags_to_replace:
+                endpoint = str_utils.replace_string(built_endpoint,
+                                                    str(request.config.cache.
+                                                        get(txt, None)),
+                                                    f'<{txt}>'
+                                                    )
+                LOGGER.debug(f'WORKING on tags:  {endpoint}')
+
+            LOGGER.info(f"PRE-CONDITION: Create - complete: {built_endpoint}")
+
             _, response = RequestController.get_instance().send_request(
-                request_method=Methods.POST.value,
-                endpoint=endpoint,
+                request_method=http.POST.value,
+                endpoint=built_endpoint,
                 payload=payload_dict)
-            request.config.cache.set(f'{endpoint[1:]}_id',
+            request.config.cache.set(f'{ENDPOINT_IDENTIFIERS[endpoint[1:]]}',
                                      response.json()['id'])
             CACHE_TAGS.append(f'{endpoint[1:]}_id')
+            LOGGER.info(f"ADDED CACHE ENTRY: "
+                        f"{ENDPOINT_IDENTIFIERS[endpoint[1:]]} -> "
+                        f"{response.json()['id']}")
 
 
 def pytest_bdd_step_error(step):
@@ -81,9 +104,10 @@ def pytest_bdd_after_scenario(request, scenario):
 
     for tag in scenario.tags:
         if "delete" in tag:
+            # element_id = request.config.cache.get('project_id', None)
             element_id = request.config.cache.get('response', None)['id']
             RequestController.get_instance().\
-                send_request(request_method=Methods.DELETE.value,
+                send_request(request_method=http.DELETE.value,
                              endpoint=f"/{tag.split('_')[-1]}/{element_id}")
 
     for tag in CACHE_TAGS:
