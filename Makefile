@@ -10,5 +10,5 @@ check:
 	python -m pycodestyle tests/ --benchmark --statistics
 
 test:
-	pytest ./tests -vvv
+	pytest -vvv --cache-clear --cucumber-json tests/reports/json_test_report.json
 
