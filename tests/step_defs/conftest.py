@@ -6,7 +6,8 @@ import pytest
 from main.core.utils.logger import CustomLogger
 from main.core.utils.file_reader import read_json
 from main.core.request_controller import RequestController
-
+from main.pivotal.utils.api_constants import ENDPOINT_IDENTIFIERS, ENDPOINT_DEPENDENCIES
+from main.pivotal.utils.api_utils import build_endpoint
 
 LOGGER = CustomLogger('test_logger')
 REQUEST_CONTROLLER = RequestController()
@@ -15,52 +16,6 @@ CACHE_TAGS = ['body', 'response', 'status_code']
 
 GLOBAL_CONTEXT = None
 SCENARIO_TAGS = None
-
-ENDPOINT_DEPENDENCIES = {
-    "projects": None,
-    "stories": "projects",
-    "epic": "projects",
-    "releases": "projects",
-    "iteration": "projects",
-    "tasks": ["projects", "stories"],
-    "transitions": ["projects", "stories"],
-    "reviews": ["projects", "stories"]
-}
-
-ENDPOINT_IDENTIFIERS = {
-    "projects": "project_id",
-    "stories": "story_id",
-    "epic": "epic_id",
-    "releases": "release_id",
-    "iteration": "iteration_id",
-    "tasks": "task_id",
-    "transitions": "transition_id",
-    "reviews": "review_id"
-}
-
-
-def build_endpoint(current_endpoint):
-    """
-    Parameters
-    ----------
-    current_endpoint (str): final endpoint for the request
-
-    Returns
-    -------
-
-    built_endpoint (str): complete endpoint route
-    """
-    built_endpoint = ''
-    dependencies = []
-    for point, dependency in ENDPOINT_DEPENDENCIES.items():
-        if point == current_endpoint:
-            if isinstance(dependency, str):
-                dependencies.append(dependency)
-                built_endpoint += f'/{dependency}/<{dependency}_id>'
-            elif isinstance(dependency, list):
-                dependencies = dependency
-
-    return built_endpoint
 
 
 @pytest.fixture(autouse=True, scope='module')
@@ -93,6 +48,7 @@ def pytest_bdd_before_scenario(request, scenario):
     for tag in scenario.tags:
         if "create" in tag:
             endpoint = f"/{tag.split('_')[-1]}"
+            built_endpoint = build_endpoint(endpoint)
             endpoint_id = ENDPOINT_IDENTIFIERS[endpoint[1:]]
             LOGGER.info(f"PRE-CONDITION: Create {endpoint}")
 
@@ -101,7 +57,7 @@ def pytest_bdd_before_scenario(request, scenario):
 
             _, response = REQUEST_CONTROLLER.send_request(
                 request_method='POST',
-                endpoint=endpoint,
+                endpoint=built_endpoint,
                 payload=payload_dict)
             request.config.cache.set(f'{endpoint_id}', response.json()['id'])
             LOGGER.info(f"NEW CACHE ENTRY: {endpoint_id} - "
