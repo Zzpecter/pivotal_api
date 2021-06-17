@@ -20,14 +20,12 @@ Feature: API Pivotal service
       | key               | value               |
       | length            | 2                   |
 
-
   @pivotal @fixture_create_projects @fixture_delete_projects
   Scenario: PUT iteration's information
     Given the following body parameters:
       | key               | value               |
       | length            | 4                   |
     When the "PUT" request to "/projects/<projects_id>/iteration_overrides/1" is sent
-    Then the response status code should be 200
     Then the response status code should be 200
     And the response body should be verified with:
       | key               | value               |

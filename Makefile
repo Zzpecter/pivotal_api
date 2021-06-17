@@ -1,14 +1,13 @@
 setup:
-	pip install -r requirements.txt
+	pip3 install -r requirements.txt
 
 check:
-	python -m flake8 main/ --benchmark --statistics
-	python -m flake8 tests/ --benchmark --statistics
-	python -m pylint main/
-	python -m pylint tests/
-	python -m pycodestyle main/ --benchmark --statistics
-	python -m pycodestyle tests/ --benchmark --statistics
+	flake8 main/ --benchmark --statistics
+	flake8 tests/ --benchmark --statistics
+	pylint main/
+	pylint tests/
+	pycodestyle main/ --benchmark --statistics
+	pycodestyle tests/ --benchmark --statistics
 
 test:
 	pytest -vvv --cache-clear --cucumber-json tests/reports/json_test_report.json
-
